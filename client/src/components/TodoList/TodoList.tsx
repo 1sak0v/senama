@@ -1,23 +1,21 @@
-import { TTasksData } from '../../types';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { AppDispatch, RootState } from '../../redux/store/store';
+import { getTasksThunk } from '../../redux/slices/tasksSlice';
 import TodoItem from '../TodoItem/TodoItem';
 
 import './todoList.scss';
 
-type TTodoListProps = {
-  tasks: TTasksData[];
-  onDeleteTask: (id: string) => void;
-  updateTaskStatus: (id: string) => void;
-};
+const TodoList = () => {
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const dispatch = useDispatch<AppDispatch>();
 
-const TodoList = ({ tasks, onDeleteTask, updateTaskStatus }: TTodoListProps) => {
-  const items = tasks.map((task) => (
-    <TodoItem
-      key={task._id}
-      {...task}
-      onDeleteTask={onDeleteTask}
-      updateTaskStatus={updateTaskStatus}
-    />
-  ));
+  useEffect(() => {
+    dispatch(getTasksThunk());
+  }, []);
+
+  const items = tasks.map((task) => <TodoItem key={task._id} {...task} />);
   return <ul className="todo-list">{items}</ul>;
 };
 

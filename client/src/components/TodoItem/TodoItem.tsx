@@ -1,14 +1,23 @@
+import { useDispatch } from 'react-redux';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+
+import { AppDispatch } from '../../redux/store/store';
+import { deleteTaskThunk, updateTaskThunk } from '../../redux/slices/tasksSlice';
 
 type TTodoItem = {
   _id: string;
   title: string;
   completed: boolean;
-  onDeleteTask: (id: string) => void;
-  updateTaskStatus: (id: string) => void;
 };
 
-const TodoItem = ({ _id, title, completed, onDeleteTask, updateTaskStatus }: TTodoItem) => {
+const TodoItem = ({ _id, title, completed }: TTodoItem) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onChangeStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const status = e.target.checked;
+    dispatch(updateTaskThunk({ id: _id, status }));
+  };
+
   return (
     <li className="todo-list__item">
       <label className="todo-list__label">
@@ -16,11 +25,14 @@ const TodoItem = ({ _id, title, completed, onDeleteTask, updateTaskStatus }: TTo
           type="checkbox"
           className="todo-list__checkbox"
           checked={completed}
-          onChange={() => updateTaskStatus(_id)}
+          onChange={onChangeStatus}
         />
         {title}
       </label>
-      <DeleteOutlineOutlinedIcon sx={{ cursor: 'pointer' }} onClick={() => onDeleteTask(_id)} />
+      <DeleteOutlineOutlinedIcon
+        sx={{ cursor: 'pointer' }}
+        onClick={() => dispatch(deleteTaskThunk(_id))}
+      />
     </li>
   );
 };

@@ -11,8 +11,9 @@ export const getTasks = async (): Promise<TTasksData[]> => {
   return response.data;
 };
 
-export const deleteTask = async (id: string): Promise<void> => {
-  await instance.delete(`tasks/${id}`);
+export const deleteTask = async (id: string): Promise<TTasksData> => {
+  const response = await instance.delete(`tasks/${id}`);
+  return response.data;
 };
 
 export const postTask = async (title: { title: string }): Promise<TTasksData> => {
@@ -20,6 +21,10 @@ export const postTask = async (title: { title: string }): Promise<TTasksData> =>
   return response.data;
 };
 
-export const updateTask = async (id: string, status: { completed: boolean }): Promise<void> => {
-  await instance.patch(`tasks/${id}`, status);
+export const updateTask = async (
+  id: string,
+  status: { completed: boolean }
+): Promise<TTasksData> => {
+  const response = await instance.patch(`tasks/${id}`, status);
+  return response.data;
 };

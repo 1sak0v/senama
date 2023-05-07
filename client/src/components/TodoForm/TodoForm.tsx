@@ -1,16 +1,18 @@
+import { useDispatch } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+
+import { AppDispatch } from '../../redux/store/store';
+import { postTaskThunk } from '../../redux/slices/tasksSlice';
 
 interface ITodoForm {
   todo: string;
 }
 
-type TTodoFormProps = {
-  addTask: (title: string) => void;
-};
+const TodoForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
 
-const TodoForm = ({ addTask }: TTodoFormProps) => {
   const {
     register,
     handleSubmit,
@@ -19,7 +21,7 @@ const TodoForm = ({ addTask }: TTodoFormProps) => {
   } = useForm<ITodoForm>();
 
   const onSubmit: SubmitHandler<ITodoForm> = ({ todo }) => {
-    addTask(todo);
+    dispatch(postTaskThunk(todo));
     reset();
   };
 
